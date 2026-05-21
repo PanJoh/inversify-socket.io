@@ -5,7 +5,7 @@
   "license": "UNLICENSED",
   "author": "Giannis Pandis",
   "type": "module",
-  "main": "dist/main.js",
+  "main": "dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
