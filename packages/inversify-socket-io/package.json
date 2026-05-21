@@ -1,0 +1,17 @@
+{
+  "name": "inversify-socket-io",
+  "version": "0.1.0",
+  "description": "As simple framework to use socket.io with inversify",
+  "license": "UNLICENSED",
+  "author": "Giannis Pandis",
+  "type": "module",
+  "main": "dist/main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "@types/node": "^25.9.1",
+    "inversify": "^8.1.0",
+    "socket.io": "^4.8.3"
+  }
+}
