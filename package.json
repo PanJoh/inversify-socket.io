@@ -1,0 +1,4 @@
+{
+    "name": "inversify-socket-io-project",
+    "workspaces": ["packages/inversify-socket-io", "packages/example"]
+}
