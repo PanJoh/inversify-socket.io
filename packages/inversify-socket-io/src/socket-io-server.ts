@@ -5,26 +5,19 @@ import type { Container, Newable } from 'inversify';
 import { SocketIoHandlerMessageParamToken, SocketIoHandlerMessagGuardToken, SocketIoHandlerToken } from './tokens.js';
 import type { SocketIoHandlerMessageGuard } from './socket-io-handler-message-guard.interface.js';
 import type { ParameterDecoratorHandler } from './parameter-decorator-handler.interface.js';
+import { HandlerMetadataKey } from './decorators.js';
 
 export class SocketIoServer {
     private io: IoServer;
-    private handlers?: ISocketIoHandler[];
 
     constructor(httpServer: Server, private readonly container: Container) {
         this.io = new IoServer(httpServer);
     }
 
-    bindHandler(handler: Newable<ISocketIoHandler>) {
-        this.container.bind<ISocketIoHandler>(SocketIoHandlerToken).to(handler);
-    }
-
     run() {
-        if (this.handlers == null) {
-            this.handlers = this.container.getAll<ISocketIoHandler>(SocketIoHandlerToken);
-        }
-        
+        const handlers = this.getHandlers();
         this.io.on('connect', (socket) => {
-            for (const handler of this.handlers!) {
+            for (const handler of handlers) {
                 if (handler.onConnect) {
                     handler.onConnect(socket);
                 }
@@ -81,5 +74,20 @@ export class SocketIoServer {
         }  
         
         await Promise.try(() => handler.handleEvent(...params));
+    }
+
+    private getHandlers() {
+        const potentialHandlers = (Reflect.getOwnMetadata(HandlerMetadataKey, Reflect) ?? []) as Newable<ISocketIoHandler>[];
+
+        const handlers = [] as ISocketIoHandler[];
+
+        for (const handlerCtor of potentialHandlers) {
+            if (!this.container.isBound(handlerCtor)) {
+                continue;
+            }
+            handlers.push(this.container.get(handlerCtor));
+        }
+
+        return handlers;
     }
 }

@@ -14,6 +14,7 @@ const container = new Container();
 container.bind(AuthController).toSelf();
 container.bind(AuthService).toSelf();
 container.bind(AuthGuardSocketIo).toSelf();
+container.bind(EchoHandler).toSelf();
 
 const adapter = new InversifyExpressHttpAdapter(container, {
     useJson: true,
@@ -24,7 +25,6 @@ const app = await adapter.build();
 const server = http.createServer(app);
 
 const socketIoServer = new SocketIoServer(server, container);
-socketIoServer.bindHandler(EchoHandler);
 socketIoServer.run();
 
 server.listen(3000);
