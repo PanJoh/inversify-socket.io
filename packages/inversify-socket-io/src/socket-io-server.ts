@@ -2,7 +2,7 @@ import { Server as IoServer, Socket } from 'socket.io';
 import { Server } from 'node:http'; 
 import type { ISocketIoHandler } from './socket-io-handler.interface.js';
 import type { Container, Newable } from 'inversify';
-import { SocketIoHandlerMessageParamToken, SocketIoHandlerMessagGuardToken, SocketIoHandlerToken } from './tokens.js';
+import { IoServerToken, SocketIoHandlerMessageParamToken, SocketIoHandlerMessagGuardToken, SocketIoHandlerToken } from './tokens.js';
 import type { SocketIoHandlerMessageGuard } from './socket-io-handler-message-guard.interface.js';
 import type { ParameterDecoratorHandler } from './parameter-decorator-handler.interface.js';
 import { HandlerMetadataKey } from './decorators.js';
@@ -12,6 +12,7 @@ export class SocketIoServer {
 
     constructor(httpServer: Server, private readonly container: Container) {
         this.io = new IoServer(httpServer);
+        container.bind(IoServerToken).toConstantValue(this.io);
     }
 
     run() {
@@ -28,7 +29,7 @@ export class SocketIoServer {
         })
     }
 
-    private async handleMessage(handler: ISocketIoHandler, socket: Socket, data: string) {
+    private async handleMessage(handler: ISocketIoHandler, socket: Socket, data: unknown) {
         const guardCtor = Reflect.getOwnMetadata(SocketIoHandlerMessagGuardToken, handler.constructor) as Newable<SocketIoHandlerMessageGuard> | undefined;
 
         if (guardCtor) {

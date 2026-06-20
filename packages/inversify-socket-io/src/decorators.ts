@@ -37,13 +37,13 @@ export function SocketIoHandler(name: string) {
 }
 
 class ClientParamDecoratorHandler implements ParameterDecoratorHandler<Socket> {
-    get(client: Socket, data: any) {
+    get(client: Socket, _data: unknown) {
         return client;
     }
 }
 
 class DataParamDecoratorHandler implements ParameterDecoratorHandler<any> {
-    get(client: Socket, data: any) {
+    get(_client: Socket, data: unknown) {
         return data;
     }
 }
