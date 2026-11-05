@@ -12,6 +12,7 @@ import { BoradcastService } from './services/boradcast.service.js';
 import { BoradcastHandler } from './socket-io-handlers/broadcast.handler.js';
 import { RoomSubscriptionHanlder } from './socket-io-handlers/room-subscription.handler.js';
 import { RoomUnsubscribeHandler } from './socket-io-handlers/room-unsubscribe.handler.js';
+import { EchoSumHandler } from './socket-io-handlers/echo-sum.handler.js';
 
 const container = new Container();
 
@@ -23,6 +24,7 @@ container.bind(BoradcastService).toSelf();
 container.bind(BoradcastHandler).toSelf();
 container.bind(RoomSubscriptionHanlder).toSelf();
 container.bind(RoomUnsubscribeHandler).toSelf();
+container.bind(EchoSumHandler).toSelf();
 
 const adapter = new InversifyExpressHttpAdapter(container, {
     useJson: true,

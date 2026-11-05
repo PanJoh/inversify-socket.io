@@ -20,11 +20,12 @@ export function UseMessageGuard(guard: Newable<SocketIoHandlerMessageGuard>) {
     }
 }
 
-export function createParamDecorator<T>(handler: Newable<ParameterDecoratorHandler<T>>) {
-    return (target: Object, _propertyKey: string, parameterIndex: number) => {
-        const params = Reflect.getOwnMetadata(SocketIoHandlerMessageParamToken, target.constructor) ?? new Map<number, ParameterDecoratorHandler<unknown>>();
-        params.set(parameterIndex, new handler());
-        Reflect.defineMetadata(SocketIoHandlerMessageParamToken, params, target.constructor);
+export function createParamDecorator<T, A = void>(handler: Newable<ParameterDecoratorHandler<T, A>, [A]>) {
+    return (arg: A) => 
+            (target: Object, _propertyKey: string, parameterIndex: number) => {
+            const params = Reflect.getOwnMetadata(SocketIoHandlerMessageParamToken, target.constructor) ?? new Map<number, ParameterDecoratorHandler<unknown>>();
+            params.set(parameterIndex, new handler(arg));
+            Reflect.defineMetadata(SocketIoHandlerMessageParamToken, params, target.constructor);
     }
 }
 
@@ -42,8 +43,18 @@ class ClientParamDecoratorHandler implements ParameterDecoratorHandler<Socket> {
     }
 }
 
-class DataParamDecoratorHandler implements ParameterDecoratorHandler<any> {
+class DataParamDecoratorHandler implements ParameterDecoratorHandler<any, string | void> {
+    constructor(private arg: string | void) {}
+    
     get(_client: Socket, data: unknown) {
+        if (this.arg != undefined) {
+            const dataObj = data as {[k: string]: unknown}
+            if (dataObj[this.arg] == null) {
+                throw new Error(`socket message has no member ${this.arg}`)
+            } else {
+                return dataObj[this.arg];
+            }
+        }
         return data;
     }
 }

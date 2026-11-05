@@ -11,7 +11,7 @@ type BroadcastData = {
 export class BoradcastHandler implements ISocketIoHandler {
     constructor(@inject(BoradcastService) private readonly broadcastService: BoradcastService) {}
 
-    handleEvent(@Data data: BroadcastData): void {
+    handleEvent(@Data() data: BroadcastData): void {
         this.broadcastService.broadcastToRoom(data.room, data.message);
     }
 }
