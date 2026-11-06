@@ -1,5 +1,5 @@
 import { inject, injectable } from "inversify";
-import { IoServerToken } from "inversify-socket-io";
+import { IoServerToken } from "@panjoh/inversify-socket-io";
 import { Server as IoServer } from 'socket.io'
 
 @injectable()

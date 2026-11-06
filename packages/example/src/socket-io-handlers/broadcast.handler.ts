@@ -1,4 +1,4 @@
-import { Data, SocketIoHandler, type ISocketIoHandler } from "inversify-socket-io";
+import { Data, SocketIoHandler, type ISocketIoHandler } from "@panjoh/inversify-socket-io";
 import { BoradcastService } from "../services/boradcast.service.js";
 import { inject } from "inversify";
 

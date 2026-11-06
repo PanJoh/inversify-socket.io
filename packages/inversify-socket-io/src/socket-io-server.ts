@@ -9,10 +9,19 @@ import { HandlerMetadataKey } from './decorators.js';
 
 export class SocketIoServer {
     private io: IoServer;
+    private errorEvent?: string;
 
     constructor(httpServer: Server, private readonly container: Container) {
         this.io = new IoServer(httpServer);
         container.bind(IoServerToken).toConstantValue(this.io);
+    }
+
+    setErrorEvent(errorEvent: string) {
+        this.errorEvent = errorEvent;
+    }
+
+    unsetErrorEvent() {
+        delete this.errorEvent;
     }
 
     run() {
@@ -68,13 +77,22 @@ export class SocketIoServer {
 
                 lastIdx = idx;
 
-                const value = paramHandlers.get(idx)!.get(socket, data);
+                try {
+                    const value = await Promise.try(() => paramHandlers.get(idx)!.get(socket, data));
+                    params.push(value);
+                } catch (err) {
+                    this.handleError(err, socket);
+                    return;
+                }
 
-                params.push(value);
             } 
         }  
         
-        await Promise.try(() => handler.handleEvent(...params));
+        try {
+            await Promise.try(() => handler.handleEvent(...params));
+        } catch (err) {
+            this.handleError(err, socket);
+        }
     }
 
     private getHandlers() {
@@ -90,5 +108,16 @@ export class SocketIoServer {
         }
 
         return handlers;
+    }
+
+    private handleError(err: unknown, socket: Socket) {
+        console.error(err);
+        if (this.errorEvent) {
+            if (err instanceof Error) {
+                socket.emit(this.errorEvent, err.message);
+            } else {
+                socket.emit(this.errorEvent, 'unknown error occured');
+            }
+        }
     }
 }

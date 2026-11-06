@@ -3,6 +3,6 @@
     "workspaces": [
         "packages/inversify-socket-io",
         "packages/example",
-        "packages/socket-io-inversify"
+        "packages/inversify-socket-io-class-transformer"
     ]
 }

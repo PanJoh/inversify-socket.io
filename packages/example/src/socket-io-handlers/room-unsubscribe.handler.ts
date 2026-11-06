@@ -1,4 +1,4 @@
-import { Client, Data, SocketIoHandler, type ISocketIoHandler } from "inversify-socket-io";
+import { Client, Data, SocketIoHandler, type ISocketIoHandler } from "@panjoh/inversify-socket-io";
 import type { Socket } from "socket.io";
 
 @SocketIoHandler('unsub-from-room')

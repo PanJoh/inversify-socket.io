@@ -1,0 +1,24 @@
+{
+  "name": "@panjoh/inversify-socket-io-class-transfomer",
+  "version": "1.0.0",
+  "description": "class-tranfsormer and class-validator integration for inversify-socket-io",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Giannis Pandis",
+  "license": "UNLICENSED",
+  "type": "module",
+  "devDependencies": {
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.15.1",
+    "typescript": "^7.0.2"
+  },
+  "peerDependencies": {
+    "@panjoh/inversify-socket-io": ">=0.2.0 && <1.0.0",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.15.1"
+  }
+}

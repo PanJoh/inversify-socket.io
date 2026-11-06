@@ -4,6 +4,7 @@ import { SocketIoHandlerMessageParamToken, SocketIoHandlerMessagGuardToken, Sock
 import type { ParameterDecoratorHandler } from "./parameter-decorator-handler.interface.js";
 import type { ISocketIoHandler } from "./socket-io-handler.interface.js";
 import type { Socket } from "socket.io";
+import type { PipeTransform } from "./validation-transformation.js";
 
 export const HandlerMetadataKey = Symbol('handler-metadata-key');
 
@@ -43,23 +44,79 @@ class ClientParamDecoratorHandler implements ParameterDecoratorHandler<Socket> {
     }
 }
 
-class DataParamDecoratorHandler implements ParameterDecoratorHandler<any, string | void> {
-    constructor(private arg: string | void) {}
+type DataParamDecoratorHandlerOptions<O> = {
+    member?: string;
+    pipe?: PipeTransform<O>
+}
+
+class DataParamDecoratorHandler<O> implements ParameterDecoratorHandler<O, DataParamDecoratorHandlerOptions<O> | void> {
+    constructor(private arg: DataParamDecoratorHandlerOptions<O> | void) {}
     
     get(_client: Socket, data: unknown) {
+        let input: unknown;
         if (this.arg != undefined) {
-            const dataObj = data as {[k: string]: unknown}
-            if (dataObj[this.arg] == null) {
-                throw new Error(`socket message has no member ${this.arg}`)
+            if (this.arg.member) {
+                const dataObj = data as {[k: string]: unknown};
+                if (dataObj[this.arg.member] == null) {
+                    throw new Error(`socket message has no member ${this.arg}`)
+                } else {
+                    input = dataObj[this.arg.member];
+                }
             } else {
-                return dataObj[this.arg];
+                input = data;
             }
+
+            if (this.arg.pipe) {
+                return this.arg.pipe.transform(input);
+            }
+
+            return input as O;
         }
-        return data;
+        return data as O;
     }
 }
 
 export const Client = createParamDecorator(ClientParamDecoratorHandler);
 
-export const Data = createParamDecorator(DataParamDecoratorHandler);
+export function Data<O>(): ParameterDecorator;
+export function Data<O>(member: string): ParameterDecorator;
+export function Data<O>(member: string, tranform: PipeTransform<O>): ParameterDecorator;
+export function Data<O>(transform: PipeTransform<O>): ParameterDecorator;
+export function Data<O>(mt: string | PipeTransform<O> | void, transform: PipeTransform<O> | void) {
+    let member: string | undefined;
+    let effectiveTransform: PipeTransform<O> | undefined;
+    if (mt != null) {
+        if (typeof mt === 'string') {
+            member = mt;
+            if (transform != null) {
+                effectiveTransform = transform;
+            }
+        } else {
+            effectiveTransform = mt;
+        }
+    }
+
+
+    if (member != null || effectiveTransform != null) {
+        let options: DataParamDecoratorHandlerOptions<O> = {};
+
+        if (member != null) {
+            options = {...options, member};
+        }
+
+        if (effectiveTransform != null) {
+            options = {...options, pipe: effectiveTransform};
+        }
+
+        const paramDecorator = createParamDecorator(DataParamDecoratorHandler<O>);
+        const decorator = paramDecorator(options);
+        
+        console.log(decorator);
+
+        return decorator;
+    }
+
+    const paramDecorator = createParamDecorator(DataParamDecoratorHandler);
+    return paramDecorator();
+}
 
