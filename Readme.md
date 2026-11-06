@@ -4,3 +4,8 @@ This is a simple framework wich enables using socket.io with handler classes, de
 It is inspired by [inversify-socket.io-utils](https://github.com/brian9206/inversify-socket.io-utils)
 
 The project is still in an early stage, to see how one can use it look at the [example](packages/example) in the packages folder. It shows how to setup the a application in combination with [@inversifyjs/http-core](https://inversify.io/framework/) a simple handler and also how to use guards for authenticaiton.
+
+It is already possible to use it by installing a npm package with:
+```
+npm install @panjoh/inversify-socket-io
+```
