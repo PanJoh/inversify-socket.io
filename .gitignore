@@ -2,4 +2,4 @@
 **/.vscode
 **/dist
 npm-deployment-token.txt
-tag-class-tranformer.sh
+tag-class-transformer.sh
