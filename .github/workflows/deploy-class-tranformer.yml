@@ -35,7 +35,7 @@ jobs:
             - uses: actions/download-artifact@v5
               with:
                 name: dist
-                path: packages/inversify-socket-io-class-transformer
+                path: packages/inversify-socket-io-class-transformer/dist
             - run: |
                 cd packages/inversify-socket-io-class-transformer
                 npm publish --access public
