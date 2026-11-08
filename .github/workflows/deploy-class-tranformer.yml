@@ -38,7 +38,7 @@ jobs:
                 path: packages/inversify-socket-io-class-transformer
             - run: |
                 cd packages/inversify-socket-io-class-transformer
-                npm publisch --access public
+                npm publich --access public
               env:
                 NODE_AUTH_TOKEN: ${{secrets.NPM_DEPLOY_CLASS_TRANSFORMER}}
 
