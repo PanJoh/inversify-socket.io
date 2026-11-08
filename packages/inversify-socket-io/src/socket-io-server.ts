@@ -43,7 +43,17 @@ export class SocketIoServer {
 
         if (guardCtor) {
             const guard = this.container.get(guardCtor);
-            const canActivate = await Promise.try(() => guard.canActivate(socket));
+            let canActivate: boolean; 
+
+//           console.debug('executing guard');
+
+            try {
+                canActivate = await Promise.try(() => guard.canActivate(socket));
+            } catch (err) {
+
+                this.handleError(err, socket);
+                return;
+            }
             if (!canActivate) {
                 return;
             }
