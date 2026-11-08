@@ -1,6 +1,6 @@
 {
   "name": "@panjoh/inversify-socket-io-class-transfomer",
-  "version": "0.2.0",
+  "version": "0.2.2",
   "description": "class-tranfsormer and class-validator integration for inversify-socket-io",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
