@@ -4,5 +4,10 @@
         "packages/inversify-socket-io",
         "packages/example",
         "packages/inversify-socket-io-class-transformer"
-    ]
+    ],
+    "devDependencies": {
+        "nodemon": "^3.1.14",
+        "ts-node": "^10.9.2",
+        "tsconfig-paths": "^4.2.0"
+    }
 }
