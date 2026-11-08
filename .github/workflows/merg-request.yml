@@ -30,7 +30,7 @@ jobs:
               run: |
                 cd packages/inversify-socket-io
                 npx tsc
-                cd ../packages/inversify-socket-io-class-transformer
+                cd ../inversify-socket-io-class-transformer
                 npx tsc
             - run: |
                 cd packages/example
