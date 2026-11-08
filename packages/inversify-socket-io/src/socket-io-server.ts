@@ -1,4 +1,4 @@
-import { Server as IoServer, Socket } from 'socket.io';
+import { Server as IoServer, Socket, type ServerOptions } from 'socket.io';
 import { Server } from 'node:http'; 
 import type { ISocketIoHandler } from './socket-io-handler.interface.js';
 import type { Container, Newable } from 'inversify';
@@ -11,8 +11,8 @@ export class SocketIoServer {
     private io: IoServer;
     private errorEvent?: string;
 
-    constructor(httpServer: Server, private readonly container: Container) {
-        this.io = new IoServer(httpServer);
+    constructor(httpServer: Server, private readonly container: Container, options?: Partial<ServerOptions>) {
+        this.io = new IoServer(httpServer, options);
         container.bind(IoServerToken).toConstantValue(this.io);
     }
 

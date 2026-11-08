@@ -1,6 +1,6 @@
 {
   "name": "@panjoh/inversify-socket-io",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "description": "As simple framework to use socket.io with inversify",
   "license": "UNLICENSED",
   "author": "Giannis Pandis",
