@@ -35,6 +35,7 @@ jobs:
                 node-version: '24'
                 registry-url: 'https://registry.npmjs.org'
             - run: |
+                cd packages/inversify-socket-io
                 npm publish --access public
               env:
                 NODE_AUTH_TOKEN: ${{secrets.NPM_DEPLOY}}
