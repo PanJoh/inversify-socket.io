@@ -27,7 +27,7 @@ jobs:
                 node-version: '24'
             - run: npm install --omit=dev
             - run: |
-                cd packages/examples
+                cd packages/example
                 npx tsc
 
                 
