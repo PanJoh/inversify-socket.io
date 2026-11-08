@@ -1,0 +1,40 @@
+name: merge request
+on:
+    pull_request:
+        types: [opened, synchronize, reopened]
+
+jobs:
+    check-for-changes:
+        runs-on: ubuntu-latest
+        outputs: 
+            example: ${{steps.filter.outputs.example}}
+        steps:
+            - uses: dorny/paths-filter@v4
+              id: filter
+              with: 
+                filters: |
+                    example:
+                        - 'packages/example/src/**/*.js'
+
+    build-example:
+        needs: check-for-changes
+        if: ${{needs.check-for-changes.outputs.example}}
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v6
+            - uses: actions/setup-node@v7
+              with:
+                node-version: '24'
+            - run: npm install
+            - id: build-dependencis
+              run: |
+                cd packages/inversify-socket-io
+                npx tsc
+                cd ../inversify-socket-io-class-transformer
+                npx tsc
+            - run: |
+                cd packages/example
+                npx tsc
+
+                
+                

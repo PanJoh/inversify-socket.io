@@ -1,0 +1,11 @@
+{
+    "ext": "ts,js",
+    "watch": [
+        "src",
+        "../inversify-socket-io/dist",
+        "../inversify-socket-io-class-transformer/dist"
+    ],
+    "ignore": [
+        "node_modules"
+    ]
+}
