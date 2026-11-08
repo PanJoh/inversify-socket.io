@@ -26,6 +26,12 @@ jobs:
               with:
                 node-version: '24'
             - run: npm install
+            - id: build-dependencis
+              run: |
+                cd packages/inversify-socket-io
+                npx tsc
+                cd ../packages/inversify-socket-io-class-transformer
+                npx tsc
             - run: |
                 cd packages/example
                 npx tsc
