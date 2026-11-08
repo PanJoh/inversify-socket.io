@@ -35,6 +35,7 @@ jobs:
                 node-version: '24'
                 registry-url: 'https://registry.npmjs.org'
             - run: |
+                ls
                 cd packages/inversify-socket-io
                 ls
                 npm publish --access public
