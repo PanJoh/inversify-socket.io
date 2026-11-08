@@ -30,6 +30,7 @@ jobs:
             - uses: actions/download-artifact@v5
               with:
                 name: dist
+                path: packages/inversify-socket-io/dist
             - uses: actions/setup-node@v7
               with:
                 node-version: '24'
