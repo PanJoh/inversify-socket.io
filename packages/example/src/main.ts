@@ -28,6 +28,10 @@ container.bind(RoomUnsubscribeHandler).toSelf();
 container.bind(EchoSumHandler).toSelf();
 container.bind(GreetHandler).toSelf();
 
+container.bind('server-name').toResolvedValue(() => {
+    return new Promise<string>(resolve => setTimeout(() => resolve('the fancy server'), 1000));
+})
+
 const adapter = new InversifyExpressHttpAdapter(container, {
     useJson: true,
 });
@@ -38,6 +42,6 @@ const server = http.createServer(app);
 
 const socketIoServer = new SocketIoServer(server, container);
 socketIoServer.setErrorEvent('error-notification');
-socketIoServer.run();
+await socketIoServer.run();
 
 server.listen(3000);

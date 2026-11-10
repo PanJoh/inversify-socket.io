@@ -24,8 +24,8 @@ export class SocketIoServer {
         delete this.errorEvent;
     }
 
-    run() {
-        const handlers = this.getHandlers();
+    async run() {
+        const handlers = await this.getHandlers();
         this.io.on('connect', (socket) => {
             for (const handler of handlers) {
                 if (handler.onConnect) {
@@ -105,7 +105,7 @@ export class SocketIoServer {
         }
     }
 
-    private getHandlers() {
+    private async getHandlers() {
         const potentialHandlers = (Reflect.getOwnMetadata(HandlerMetadataKey, Reflect) ?? []) as Newable<ISocketIoHandler>[];
 
         const handlers = [] as ISocketIoHandler[];
@@ -114,7 +114,7 @@ export class SocketIoServer {
             if (!this.container.isBound(handlerCtor)) {
                 continue;
             }
-            handlers.push(this.container.get(handlerCtor));
+            handlers.push(await this.container.getAsync(handlerCtor));
         }
 
         return handlers;
