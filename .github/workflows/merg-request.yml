@@ -8,6 +8,8 @@ jobs:
         runs-on: ubuntu-latest
         outputs: 
             example: ${{steps.filter.outputs.example}}
+            socket-io: ${{steps.filter.outputs.socket-io}}
+            class-transformer: ${{steps.filter.outputs.class-transformer}}
         steps:
             - uses: dorny/paths-filter@v4
               id: filter
@@ -15,10 +17,14 @@ jobs:
                 filters: |
                     example:
                         - 'packages/example/src/**/*.ts'
+                    socket-io:
+                        - 'packages/inversify-socket-io/src/**/*.ts'
+                    class-transformer:
+                        - 'packages/inversify-socket-io-class-transformer/**/*.ts'
 
     build-example:
         needs: check-for-changes
-        if: ${{needs.check-for-changes.outputs.example}}
+        if: ${{needs.check-for-changes.outputs.example == 'true'}}
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v6
@@ -36,5 +42,28 @@ jobs:
                 cd packages/example
                 npx tsc
 
-                
-                
+    build-socket-io:
+        needs: check-for-changes
+        if: ${{needs.check-for-changes.outputs.socket-io == 'true'}}
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v6
+            - uses: actions/setup-node@v7
+              with:
+                node-version: '24'
+            - run: |
+                cd packages/inversify-socket-io
+                npx tsc
+    
+    class-transformer:
+        needs: check-for-changes
+        if: ${{needs.check-for-changes.outputs.class-transformer == 'true'}}
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v6
+            - uses: actions/setup-node@v7
+              with:
+                node-version: '24'
+            - run: |
+                cd packages/inversify-socket-io-class-transformer
+                npx tsc
